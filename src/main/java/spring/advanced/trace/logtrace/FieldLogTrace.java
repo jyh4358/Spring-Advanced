@@ -1,30 +1,54 @@
-package spring.advanced.trace.hellotrace;
+package spring.advanced.trace.logtrace;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import spring.advanced.trace.TraceId;
 import spring.advanced.trace.TraceStatus;
 
 @Slf4j
-@Component
-public class HelloTraceV1 {
+public class FieldLogTrace implements LogTrace{
 
     private static final String START_PREFIX = "-->";
     private static final String COMPLETE_PREFIX = "<--";
     private static final String EX_PREFIX = "<X-";
 
+    private TraceId traceIdHolder; // traceId 동기화, 동시성 이슈 발생
+
+
+    private void syncTraceId() {
+        if (traceIdHolder == null) {
+            traceIdHolder = new TraceId();
+        } else {
+            traceIdHolder = traceIdHolder.createNextId();
+        }
+
+        releaseTraceId();
+    }
+
+    private void releaseTraceId() {
+        if (traceIdHolder.isFirstLevel()) {
+            traceIdHolder = null;   // destroy
+        } else {
+            traceIdHolder = traceIdHolder.createPreviousId();
+        }
+
+    }
+
+    @Override
     public TraceStatus begin(String message) {
-        TraceId traceId = new TraceId();
+        syncTraceId();
+        TraceId traceId = traceIdHolder;
         Long startTimeMs = System.currentTimeMillis();
         log.info("[{}] {}{}", traceId.getId(), addSpace(START_PREFIX,
                 traceId.getLevel()), message);
         return new TraceStatus(traceId, startTimeMs, message);
     }
 
+    @Override
     public void end(TraceStatus status) {
         complete(status, null);
     }
 
+    @Override
     public void exception(TraceStatus status, Exception e) {
         complete(status, e);
     }
