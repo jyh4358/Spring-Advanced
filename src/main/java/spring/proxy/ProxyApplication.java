@@ -9,13 +9,15 @@ import spring.proxy.config.v1_proxy.ConcreteProxyConfig;
 import spring.proxy.config.v1_proxy.InterfaceProxyConfig;
 import spring.proxy.config.v2_dinamicproxy.DinamicProxyBasicConfig;
 import spring.proxy.config.v3_proxyfactory.ProxyFactoryConfigV1;
+import spring.proxy.config.v3_proxyfactory.ProxyFactoryConfigV2;
 
 //@Import(AppV1Config.class)
 //@Import({AppV1Config.class, AppV2Config.class})
 //@Import(InterfaceProxyConfig.class)
 //@Import(ConcreteProxyConfig.class)
 //@Import(DinamicProxyBasicConfig.class)
-@Import(ProxyFactoryConfigV1.class)
+//@Import(ProxyFactoryConfigV1.class)
+@Import(ProxyFactoryConfigV2.class)
 @SpringBootApplication(scanBasePackages = "spring.proxy.app")
 public class ProxyApplication {
 
