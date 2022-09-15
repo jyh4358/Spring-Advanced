@@ -23,7 +23,7 @@ import spring.proxy.config.v6_aop.AopConfig;
 //@Import(ProxyFactoryConfigV2.class)
 //@Import(BeanPostProcessorConfig.class)
 //@Import(AutoProxyConfig.class)
-@Import(AopConfig.class)
+//@Import(AopConfig.class)
 @SpringBootApplication(scanBasePackages = "spring.proxy.app")
 public class ProxyApplication {
 
